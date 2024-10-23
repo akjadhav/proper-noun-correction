@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Proper Noun Correction Dictation",
+  "version": "1.0",
+  "description": "A dictation tool with proper noun correction using LLMs.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["static/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
