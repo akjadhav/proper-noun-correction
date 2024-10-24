@@ -9,6 +9,7 @@ const AudioInput: React.FC<{ onTranscription: (text: string) => void }> = ({
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [scriptProcessor, setScriptProcessor] =
     useState<ScriptProcessorNode | null>(null);
+  const [processing, setProcessing] = useState(false);
 
   const startRecording = async () => {
     try {
@@ -52,6 +53,7 @@ const AudioInput: React.FC<{ onTranscription: (text: string) => void }> = ({
       formData.append('file', audioBlob, 'recording.pcm');
 
       // Send to backend
+      setProcessing(true);
       axios
         .post('http://localhost:8000/transcribe_pcm', formData)
         .then((response) => {
@@ -59,6 +61,9 @@ const AudioInput: React.FC<{ onTranscription: (text: string) => void }> = ({
         })
         .catch((error) => {
           console.error('Transcription error:', error);
+        })
+        .finally(() => {
+          setProcessing(false);
         });
 
       setRecording(false);
@@ -77,12 +82,36 @@ const AudioInput: React.FC<{ onTranscription: (text: string) => void }> = ({
     return result;
   };
 
+  const buttonStyle = {
+    width: '100%',
+    padding: '10px',
+    marginBottom: '10px',
+    backgroundColor: recording ? '#dc004e' : '#1976d2',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer' as const,
+  };
+
+  const processingStyle = {
+    textAlign: 'center' as const,
+    marginTop: '10px',
+  };
+
   return (
-    <div>
-      <button onClick={recording ? stopRecording : startRecording}>
+    <>
+      <button
+        style={buttonStyle}
+        onClick={recording ? stopRecording : startRecording}
+        disabled={processing}>
         {recording ? 'Stop Recording' : 'Start Recording'}
       </button>
-    </div>
+      {processing && (
+        <div style={processingStyle}>
+          <div>Processing transcription...</div>
+        </div>
+      )}
+    </>
   );
 };
 
