@@ -4,8 +4,13 @@ interface Props {
   transcription: string;
 }
 
-const TranscriptionDisplay: React.FC<Props> = ({ transcription }) => {
-  // Simple regex to identify capitalized words as potential proper nouns
+const TranscriptionDisplay: React.FC<Props> = ({ transcription = '' }) => {
+  // regex to identify capitalized words as potential proper nouns
+
+  if (!transcription) {
+    return <div>No transcription available.</div>;
+  }
+
   const words = transcription.split(' ').map((word, index) => {
     const isProperNoun = /^[A-Z][a-z]+$/.test(word);
     return (

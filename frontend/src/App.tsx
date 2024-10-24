@@ -1,4 +1,3 @@
-// frontend/src/App.tsx
 import React, { useState } from 'react';
 import AudioInput from './components/AudioInput';
 import TranscriptionDisplay from './components/TranscriptionDisplay';
@@ -12,6 +11,12 @@ const App: React.FC = () => {
       <h1>Proper Noun Correction Dictation</h1>
       <AudioInput onTranscription={setTranscription} />
       <TranscriptionDisplay transcription={transcription} />
+      <br />
+      {transcription && (
+        <button onClick={() => navigator.clipboard.writeText(transcription)}>
+          Copy Transcription
+        </button>
+      )}
     </div>
   );
 };
